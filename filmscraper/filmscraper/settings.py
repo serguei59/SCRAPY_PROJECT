@@ -64,9 +64,13 @@ RANDOMIZE_DOWNLOAD_DELAY = True # entre 0.5 et 1.5 secondes
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    "filmscraper.pipelines.FilmscraperPipeline": 300,
-#}
+ITEM_PIPELINES = {
+    #"filmscraper.pipelines.FilmscraperPipeline": 300,
+    "filmscraper.pipelines.FilmsAllocinescraperPipeline":100,
+    "filmscraper.pipelines.SeriesAllocinescraperPipeline":200
+
+
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
