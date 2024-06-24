@@ -9,7 +9,7 @@ class AllocineSerieSpiderSpider(CrawlSpider):
 
     allowed_domains = ["www.allocine.fr"]
 
-    start_urls = [f"https://www.allocine.fr/series-tv/?page={j}" for j in range(1,2)]
+    start_urls = [f"https://www.allocine.fr/series-tv/?page={j}" for j in range(1,100)]
 
     custom_settings ={
             "ITEM_PIPELINES" : {
