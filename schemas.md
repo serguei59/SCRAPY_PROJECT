@@ -65,16 +65,17 @@ erDiagram
         int4 personnes_id PK
     }
 
-    FILMS }|--|| FILMS_GENRES:has
-    FILMS }|--|| ORIGINE_GEO_FILMS:has
+    FILMS }|--|{ FILMS_GENRES:has
+    FILMS ||--|{ ORIGINE_GEO_FILMS:has
+    SERIES }|--|{ SERIES_GENRE:has
+    SERIES ||--|{ ORIGINE_GEO_SERIES:has
+    
     FILMS }|--|| ACTEURS_FILMS:has
     FILMS }|--|| REALISATEUR_FILMS:has
-    SERIES }|--|| SERIES_GENRE:has
-    SERIES }|--|| ORIGINE_GEO_SERIES:has
-    SERIES }|--|| REALISATEUR_SERIES:has
-    SERIES }|--|| ACTEURS_SERIES:has
     PERSONNES }|--|| ACTEURS_FILMS:has
     PERSONNES }|--|| REALISATEUR_FILMS:has
+    SERIES }|--|| REALISATEUR_SERIES:has
+    SERIES }|--|| ACTEURS_SERIES:has    
     PERSONNES }|--|| REALISATEUR_SERIES:has
     PERSONNES }|--|| ACTEURS_SERIES:has
 
