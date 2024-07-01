@@ -42,11 +42,11 @@ erDiagram
     }
     ACTEURS_FILMS {
         int4 film_id  PK,FK
-        int4 personnes_id  PK
+        int4 personnes_id  PK, FK
     }
     REALISATEUR_FILMS {
         int4 film_id PK, FK
-        int4 personnes_id PK
+        int4 personnes_id PK, FK
     }
     SERIES_GENRE {
         int4 serie_id PK, FK
@@ -54,15 +54,15 @@ erDiagram
     }
     ORIGINE_GEO_SERIES {
         int4 serie_id PK, FK
-        varchar pays PK
+        varchar pays PK 
     }
     ACTEURS_SERIES {
-        int4 serie_id PK,FK
-        int4 personnes_id PK
+        int4 serie_id PK, FK
+        int4 personnes_id PK, FK
     }
     REALISATEUR_SERIES{
         int4 serie_id PK, FK
-        int4 personnes_id PK
+        int4 personnes_id PK, FK
     }
 
     FILMS }|--|{ FILMS_GENRES:has
