@@ -8,8 +8,10 @@
 from itemadapter import ItemAdapter
 import re
 
-from filmscraper.models import Film, GenreFilm, GenreSerie, LangueFilm, OrigineFilm, OrigineSerie, Serie, create_table, db_connect
+from filmscraper.models import Film, GenreFilm, GenreSerie, LangueFilm, OrigineFilm, OrigineSerie, Personne, Serie, create_table, db_connect
 from sqlalchemy.orm import sessionmaker
+import pandas as pd
+
 
 class FilmscraperPipeline:
     #un process item par spider
@@ -261,6 +263,127 @@ class SaveSeriePipeline(object):
 
         finally: 
         """
+
+class SavePersonnePipeline(object):
+    def __init__(self):
+        """
+        initialization of database connnection and sessionmaker
+        creation of tables
+        """
+        engine = db_connect()
+        create_table(engine)
+        self.Session = sessionmaker(bind=engine)
+
+    def process_item(self, item, spider):
+        """
+        saving of personne (acteurs & realisateurs from films & serie)in the database
+        method called for every item pipeline component            
+        """
+        session = self.Session()
+        
+        #recuperer tous les ACTEURS de films ou series suivant le spider
+        # ->affecter le pipeline dans chacun des spiders: VERIF
+        ##type de l item:liste avec val nulles possibles
+        ##il faut isoler les couple noms prenoms:ce sont juste les elts de la liste
+        ##pour chacun il faut separer le nom du prenom via split avec " " ou ". " comme separateur
+        for i in range(len(item['acteurs'])):
+            liste_nom_prenom_acteur = item[('acteurs')][i].split(". ", 1) if ". " in item[('acteurs')][i] else item[('acteurs')][i].split(" ", 1)
+            ## et affecter ensuite [0] a nom et [1] à prenom 
+            personne = Personne()
+            #personne.personnes_id => autoincrementé
+            personne.prenom = liste_nom_prenom_acteur[0]
+            personne.nom = liste_nom_prenom_acteur[1]
+            session.add(personne)
+            session.commit()
+
+        #recuperer tous les REALISATEURS de films ou series
+        ##type de l item 
+        #il faut distinguer les cas 1/2: string(get)
+        
+        if type(item['realisateur']) == str:
+            #si l item est un nom unique == ne contient pas de " "
+            if " " not in item['realisateur'] :
+                #  alors prenom vide et nom == item 
+                personne = Personne() 
+                personne.nom = item['realisateur']
+                session.add(personne)
+                session.commit()
+                          
+            # si item contient ". "
+            elif ". " in item['realisateur']:
+                #alors il faut separer le nom du prenom via split ". "
+                liste_nom_prenom_realisateur = item[('realisateur')][i].split(". ", 1)
+                print(f"liste realisateurs cas 1: {liste_nom_prenom_realisateur}")
+                personne = Personne()
+                personne.prenom = liste_nom_prenom_realisateur[0]
+                personne.nom = liste_nom_prenom_realisateur[1]
+                session.add(personne)
+                session.commit()
+            # si item contient " " alors
+            elif " " in item['realisateur']:
+                #alors il faut separer le nom du prenom via split ". "
+                liste_nom_prenom_realisateur = item[('realisateur')][i].split(" ", 1)
+                print(f"liste realisateurs cas 2: {liste_nom_prenom_realisateur}")
+                personne = Personne()
+                personne.prenom = liste_nom_prenom_realisateur[0]
+                personne.nom = liste_nom_prenom_realisateur[1]
+                session.add(personne)
+                session.commit()
+      
+
+        #il faut distinguer les cas 2/2 : list(getall)
+        if type(item['realisateur']) == list:
+            #iterer sur les elements de la liste et pour chacun reappliquer le raisonnement
+            for i in range(len(item['realisteur'])):
+                #si l item est un nom unique == ne contient pas de " "
+                if " " not in item['realisateur'] :
+                    #  alors prenom vide et nom == item 
+                    personne = Personne() 
+                    personne.nom = item['realisateur']
+                    session.add(personne)
+                    session.commit()
+                          
+                # si item contient ". "
+                elif ". " in item['realisateur']:
+                    #alors il faut separer le nom du prenom via split ". "
+                    liste_nom_prenom_realisateur = item[('realisateur')][i].split(". ", 1)
+                    print(f"liste realisateurs cas 2.1: {liste_nom_prenom_realisateur}")
+                    personne = Personne()
+                    personne.prenom = liste_nom_prenom_realisateur[0]
+                    personne.nom = liste_nom_prenom_realisateur[1]
+                    session.add(personne)
+                    session.commit()
+                # si item contient " " alors
+                elif " " in item['realisateur']:
+                    #alors il faut separer le nom du prenom via split ". "
+                    liste_nom_prenom_realisateur = item[('realisateur')][i].split(" ", 1)
+                    print(f"liste realisateurs cas 2.2: {liste_nom_prenom_realisateur}")
+                    personne = Personne()
+                    personne.prenom = liste_nom_prenom_realisateur[0]
+                    personne.nom = liste_nom_prenom_realisateur[1]
+                    session.add(personne)
+                    session.commit()
+
+
+        session.close()
+
+        return item
+    """ 
+        #traiter les doublons eventuels
+        #obtenir toutes les personnes
+        #supprimer les doublons(des le deuxieme usage,cela ne supprimera donc que les doublons supplementaires generes)
+        # via pandas? poetry add + import
+        #transfo de Personne en dataframe
+        connection = session.connection
+        df_personne = pd.read_sql_table("Personne", connection)
+        #suppression des doublons
+        
+        cleaned_df_personne = df_personne.drop_duplicates(keep = 'first', inplace=True) 
+        #restitution a l objet table Personne
+        cleaned_df_personne.to_sql("Personne", connection, if_exists='append')
+        session.commit() """
+
+        
 
 
 

@@ -88,46 +88,46 @@ class Personne(Base):
 """    
 class ActeursFilm(Base):
     __tablename__ = 'acteurs_films'
-    film_id = Column(Integer, ForeignKey('films.film_id'), primary_key=True, autoincrement=True)
-    personnes_id = Column(Integer,ForeignKey('personnes.personne_id'), primary_key=True, autoincrement=True)
+    film_id = Column(Integer, ForeignKey('films.film_id'), primary_key=True)
+    personnes_id = Column(Integer,ForeignKey('personnes.personne_id'), primary_key=True)
     film = relationship("Film", backref="personnes")
     personne = relationship("Personne", backref="films")
 
     __table_args__ = (
-        PrimaryKeyConstraint('film_id', 'personnes_id')
+        PrimaryKeyConstraint('film_id', 'personnes_id'),
     )
 
 class RealisateurFilm(Base):
     __tablename__ = 'realisateur_films'
-    film_id = Column(Integer,ForeignKey('films.film_id'), primary_key=True, autoincrement=True)
-    personnes_id = Column(Integer,ForeignKey('personnes.personne_id'), primary_key=True, autoincrement=True)
+    film_id = Column(Integer,ForeignKey('films.film_id'), primary_key=True)
+    personnes_id = Column(Integer,ForeignKey('personnes.personne_id'), primary_key=True)
     film = relationship("Film", backref="personnes")
     personne = relationship("Personne", backref="films")
 
     __table_args__ = (
-        PrimaryKeyConstraint('film_id', 'personnes_id')
+        PrimaryKeyConstraint('film_id', 'personnes_id'),
     )
 
 class ActeursSerie(Base):
     __tablename__ = 'acteurs_series'
-    serie_id = Column(Integer, ForeignKey('series.serie_id'), primary_key=True, autoincrement=True)
-    personnes_id = Column(Integer,ForeignKey('personnes.personne_id'), primary_key=True, autoincrement=True)
+    serie_id = Column(Integer, ForeignKey('series.serie_id'), primary_key=True)
+    personnes_id = Column(Integer,ForeignKey('personnes.personne_id'), primary_key=True)
     serie = relationship("Serie", backref="personnes")
     personne = relationship("Personne", backref="series")
 
     __table_args__ = (
-        PrimaryKeyConstraint('serie_id', 'personnes_id')
+        PrimaryKeyConstraint('serie_id', 'personnes_id'),
     )
 
 class RealisateurSerie(Base):
     __tablename__ = 'realisateur_series'
-    film_id = Column(Integer, ForeignKey('series.serie_id'), primary_key=True, autoincrement=True)
-    personnes_id = Column(Integer, ForeignKey('personnes.personne_id'), primary_key=True, autoincrement=True)
+    film_id = Column(Integer, ForeignKey('series.serie_id'), primary_key=True)
+    personnes_id = Column(Integer, ForeignKey('personnes.personne_id'), primary_key=True)
     serie = relationship("Serie", backref="personnes")
     personne = relationship("Personne", backref="series")
 
     __table_args__ = (
-        PrimaryKeyConstraint('serie_id', 'personnes_id')
+        PrimaryKeyConstraint('serie_id', 'personnes_id'),
     ) """
 #tables en many to one avec film et serie
 
