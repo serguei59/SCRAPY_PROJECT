@@ -67,7 +67,9 @@ RANDOMIZE_DOWNLOAD_DELAY = True # entre 0.5 et 1.5 secondes
 ITEM_PIPELINES = {
     #"filmscraper.pipelines.FilmscraperPipeline": 300,
     "filmscraper.pipelines.FilmsAllocinescraperPipeline":100,
-    "filmscraper.pipelines.SeriesAllocinescraperPipeline":200
+    "filmscraper.pipelines.SeriesAllocinescraperPipeline":200,
+    "filmscraper.pipelines.SaveFilmPipeline":300,
+    "filmscraper.pipelines.SaveSeriePipeline":400
 
 
 }
