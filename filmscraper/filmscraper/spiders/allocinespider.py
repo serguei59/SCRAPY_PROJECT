@@ -13,8 +13,7 @@ class AllocinespiderSpider(CrawlSpider):
     custom_settings = {
         "ITEM_PIPELINES" : {
     "filmscraper.pipelines.FilmsAllocinescraperPipeline":100,
-    "filmscraper.pipelines.SaveFilmPipeline":200,
-    "filmscraper.pipelines.SavePersonnePipeline":300
+    "filmscraper.pipelines.SaveFilmPipeline":200
 }
 
     }

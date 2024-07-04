@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, ARRAY, create_engine, ForeignKey
 from sqlalchemy.orm import sessionmaker, declarative_base, relationship
 import csv
-from sqlalchemy.schema import PrimaryKeyConstraint
+from sqlalchemy.schema import PrimaryKeyConstraint, UniqueConstraint
 
 Base = declarative_base()
 
@@ -57,6 +57,8 @@ class Film(Base):
     un_film = relationship('GenreFilm', backref='films')
     un_film = relationship('LangueFilm', backref='films')
     un_film = relationship('OrigineFilm', backref='films')
+    real_films = relationship('RealisateurFilm', back_populates='mapper_film')
+
 
 
 #serie est en association many to one avec serie_genre et avec serie_origine
@@ -75,60 +77,71 @@ class Serie(Base):
     #rajouter la mention one to many avec seriesgenre et origineserie
     une_serie = relationship('GenreSerie', backref='films')
     une_serie = relationship('OrigineSerie', backref='films')
+    #rajout relation back_populates avec realisateur serie
+    real_series = relationship("RealisateurSerie", back_populates="mapper_serie")
+
 
 
 
 class Personne(Base):
     __tablename__ = 'personnes'
-    personnes_id = Column(Integer, primary_key=True, autoincrement=True)
+    personne_id = Column(Integer, primary_key=True, autoincrement=True)
     prenom = Column(String)
     nom = Column(String)
+    #serie = relationship("Serie", back_populates="personnes") relation avec realisateur film
+    #real_films = relationship('RealisateurFilm', back_populates=)
+    #relation avec realisateur serie
+    real_series = relationship('RealisateurSerie', back_populates='mapper_personne')
+    real_films = relationship('RealisateurFilm', back_populates='mapper2_personne')
+    __table_args__ = (
+        UniqueConstraint('prenom', 'nom'),
+    )
 
 #tables association entre film / serie et personnes
-"""    
+
 class ActeursFilm(Base):
     __tablename__ = 'acteurs_films'
     film_id = Column(Integer, ForeignKey('films.film_id'), primary_key=True)
-    personnes_id = Column(Integer,ForeignKey('personnes.personne_id'), primary_key=True)
+    personne_id = Column(Integer,ForeignKey('personnes.personne_id'), primary_key=True)
     film = relationship("Film", backref="personnes")
     personne = relationship("Personne", backref="films")
 
     __table_args__ = (
-        PrimaryKeyConstraint('film_id', 'personnes_id'),
+        PrimaryKeyConstraint('film_id', 'personne_id'),
     )
 
 class RealisateurFilm(Base):
     __tablename__ = 'realisateur_films'
     film_id = Column(Integer,ForeignKey('films.film_id'), primary_key=True)
-    personnes_id = Column(Integer,ForeignKey('personnes.personne_id'), primary_key=True)
-    film = relationship("Film", backref="personnes")
-    personne = relationship("Personne", backref="films")
+    personne_id = Column(Integer,ForeignKey('personnes.personne_id'), primary_key=True)
+    mapper_film = relationship("Film", back_populates="real_films")
+    mapper2_personne = relationship("Personne", back_populates="real_films")
 
     __table_args__ = (
-        PrimaryKeyConstraint('film_id', 'personnes_id'),
+        PrimaryKeyConstraint('film_id', 'personne_id'),
     )
 
 class ActeursSerie(Base):
     __tablename__ = 'acteurs_series'
     serie_id = Column(Integer, ForeignKey('series.serie_id'), primary_key=True)
-    personnes_id = Column(Integer,ForeignKey('personnes.personne_id'), primary_key=True)
+    personne_id = Column(Integer,ForeignKey('personnes.personne_id'), primary_key=True)
     serie = relationship("Serie", backref="personnes")
     personne = relationship("Personne", backref="series")
 
     __table_args__ = (
-        PrimaryKeyConstraint('serie_id', 'personnes_id'),
+        PrimaryKeyConstraint('serie_id', 'personne_id'),
     )
 
 class RealisateurSerie(Base):
     __tablename__ = 'realisateur_series'
-    film_id = Column(Integer, ForeignKey('series.serie_id'), primary_key=True)
-    personnes_id = Column(Integer, ForeignKey('personnes.personne_id'), primary_key=True)
-    serie = relationship("Serie", backref="personnes")
-    personne = relationship("Personne", backref="series")
+    serie_id = Column(Integer, ForeignKey('series.serie_id'), primary_key=True)
+    personne_id = Column(Integer, ForeignKey('personnes.personne_id'), primary_key=True)
+    mapper_serie = relationship("Serie", back_populates="real_series")
+    mapper_personne = relationship("Personne", back_populates="real_series")
 
     __table_args__ = (
-        PrimaryKeyConstraint('serie_id', 'personnes_id'),
-    ) """
+        PrimaryKeyConstraint('serie_id', 'personne_id'),
+    ) 
 #tables en many to one avec film et serie
 
 class GenreFilm(Base):

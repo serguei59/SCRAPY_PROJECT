@@ -69,11 +69,8 @@ ITEM_PIPELINES = {
     "filmscraper.pipelines.FilmsAllocinescraperPipeline":100,
     "filmscraper.pipelines.SeriesAllocinescraperPipeline":200,
     "filmscraper.pipelines.SaveFilmPipeline":300,
-    "filmscraper.pipelines.SaveSeriePipeline":400,
-    "filmscraper.pipelines.SavePersonnePipeline":500
-
-
-
+    "filmscraper.pipelines.SaveSeriePipeline":400
+    
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
