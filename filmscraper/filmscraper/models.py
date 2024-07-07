@@ -2,14 +2,20 @@ from sqlalchemy import Column, Integer, String, ARRAY, create_engine, ForeignKey
 from sqlalchemy.orm import sessionmaker, declarative_base, relationship
 import csv
 from sqlalchemy.schema import PrimaryKeyConstraint, UniqueConstraint
+import os
+from os import environ
+from dotenv import load_dotenv
+load_dotenv
 
 Base = declarative_base()
+
+# import des variables d environnement
 
 # Configuration de la base de données
 #engine = create_engine('postgresql+psycopg2://sergebuasa:Rebirth2024+@:buasaserver.postgres.database.azure.com/flexibleserverdb')
 # azure
 #azureengine = create_engine('postgresql+psycopg2://sergebuasa:Rebirth2024+@buasaserver.postgres.database.azure.com/buasa_bdd')
-#creation config base de donnes dans serveur psotgtreysql local
+#creation config base de donnes dans serveur postgtreysql local
 #engine = create_engine('jdbc:postgresql://localhost:5432/buasa_allocinescrapping_bdd')
 
 def db_connect():
@@ -17,7 +23,14 @@ def db_connect():
     connection to database
     return of sqlalchemy engine instance
     """
-    return create_engine('postgresql+psycopg2://sergebuasa:Rebirth2024+@localhost:5432/buasa_allocinescrapping_bdd')
+    username = os.getenv("DB_USERNAME")
+    hostname = os.getenv("DB_HOSTNAME")
+    port = os.getenv("DB_PORT")
+    database_name = os.getenv("DB_NAME")
+    password = os.getenv("DBSERVER_PASSWORD")
+    bdd_path = f"postgresql+psycopg2://{username}:{password}@{hostname}:{port}/{database_name}"
+    #return create_engine('postgresql+psycopg2://sergebuasa:Rebirth2024+@localhost:5432/buasa_allocinescrapping_bdd')
+    return create_engine(bdd_path)
 
 def create_table(engine):
     """
@@ -28,18 +41,6 @@ def create_table(engine):
 #Session = sessionmaker(bind=engine)
 #session = Session()
 
-
-""" class Book(Base):
-    __tablename__ = 'books'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    ISBN = Column(String, unique=True, nullable=False)
-    Book_Title = Column(String, nullable=False)
-    Book_Author = Column(String, nullable=False)
-    Year_Of_Publication = Column(Integer, nullable=False)
-    Publisher = Column(String, nullable=False)
-    Image_URL_S = Column(String)
-    Image_URL_M = Column(String)
-    Image_URL_L = Column(String) """
 
 #film est en association one to many avec film_genre, film_origine et film langue
 class Film(Base):
