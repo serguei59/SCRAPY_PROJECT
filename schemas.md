@@ -36,6 +36,10 @@ erDiagram
         int4 film_id PK, FK
         varchar genre PK
     }
+    FILMS_LANGUES {
+        int4 film_id PK, FK
+        varchar langue_origine PK
+    }
     ORIGINE_GEO_FILMS{
         int4 film_id PK, FK
         varchar pays  PK
@@ -66,6 +70,7 @@ erDiagram
     }
 
     FILMS }|--|{ FILMS_GENRES:has
+    FILMS }|--|{ FILMS_LANGUES:has
     FILMS ||--|{ ORIGINE_GEO_FILMS:has
     SERIES }|--|{ SERIES_GENRE:has
     SERIES ||--|{ ORIGINE_GEO_SERIES:has

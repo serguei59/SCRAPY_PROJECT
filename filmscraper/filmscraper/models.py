@@ -5,7 +5,7 @@ from sqlalchemy.schema import PrimaryKeyConstraint, UniqueConstraint
 import os
 from os import environ
 from dotenv import load_dotenv
-load_dotenv
+load_dotenv()
 
 Base = declarative_base()
 
@@ -24,11 +24,15 @@ def db_connect():
     return of sqlalchemy engine instance
     """
     username = os.getenv("DB_USERNAME")
-    hostname = os.getenv("DB_HOSTNAME")
+    #hostname = os.getenv("DB_HOSTNAME")
+    hostname = os.getenv("DB_HOSTNAME_AZURE")
+    print(hostname)
     port = os.getenv("DB_PORT")
     database_name = os.getenv("DB_NAME")
     password = os.getenv("DBSERVER_PASSWORD")
+    #bdd_path = f"postgresql+psycopg2://{username}:{password}@{hostname}:{port}/{database_name}"
     bdd_path = f"postgresql+psycopg2://{username}:{password}@{hostname}:{port}/{database_name}"
+
     #return create_engine('postgresql+psycopg2://sergebuasa:Rebirth2024+@localhost:5432/buasa_allocinescrapping_bdd')
     return create_engine(bdd_path)
 
